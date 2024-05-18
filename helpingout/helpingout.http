@@ -1,0 +1,6 @@
+@helpingout_HostAddress = http://localhost:5191
+
+GET {{helpingout_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
