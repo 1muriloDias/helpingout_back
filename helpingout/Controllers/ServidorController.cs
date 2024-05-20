@@ -5,6 +5,7 @@ using MySqlConnector;
 using System;
 using System.Linq; // Importante para usar ToList()
 using helpingout.Data;
+using helpingout.Models;
 
 namespace helpingout.Controllers
 {
@@ -20,7 +21,7 @@ namespace helpingout.Controllers
         }
 
         [HttpGet("Mysql")]
-        public async Task<IActionResult> Banco()
+        public async Task<IActionResult> Chamada()
         {
             try
             {
@@ -39,7 +40,7 @@ namespace helpingout.Controllers
 
                     using (var command = conn.CreateCommand())
                     {
-                        command.CommandText = @"INSERT INTO usuarios (id, nome, admin) VALUES (123, 'teobaldo', 0)";
+                        command.CommandText = @"INSERT INTO usuarios (id, nome, admin) VALUES (123, 'murilindo', 0)";
                         int rowCount = await command.ExecuteNonQueryAsync();
                         // Log de inserção, se necessário
                         // _logger.LogInformation($"Number of rows inserted: {rowCount}");
@@ -55,61 +56,79 @@ namespace helpingout.Controllers
             }
         }
 
-        // Criar/Editar Post/Put
+
+        //Criar/Editar Post/Put
         [HttpPost]
-        public async Task<IActionResult> CriarEditar(Usuario usuario)
+        public JsonResult CriarEditar(Usuario usuario)
         {
-            if (usuario.Id == 0)
+            if (usuario.id_usuario == 0)
             {
-                _context.Usuarios.Add(usuario);
+                _context.usuarios.Add(usuario);
             }
             else
             {
-                var usuarioNoBD = await _context.Usuarios.FindAsync(usuario.Id);
+                var usuarioNoBD = _context.usuarios.Find(usuario.id_usuario);
                 if (usuarioNoBD == null)
                 {
-                    return NotFound();
+                    return new JsonResult(NotFound());
                 }
-                usuarioNoBD.Nome = usuario.Nome;
-                // Atualize outras propriedades conforme necessário
+                usuarioNoBD = usuario;
             }
-            await _context.SaveChangesAsync();
-            return Ok(usuario);
+            _context.SaveChanges();
+            return new JsonResult(Ok(usuario));
         }
-
-        // Pegar GET
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Pegar(int id)
+        //Pegar GET
+        [HttpGet]
+        public JsonResult Pegar(int id)
         {
-            var result = await _context.Usuarios.FindAsync(id);
+            var result = _context.usuarios.Find(id);
             if (result == null)
             {
-                return NotFound();
+                return new JsonResult(NotFound());
             }
-            return Ok(result);
+            return new JsonResult(Ok(result));
         }
 
-        // Deletar
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Deletar(int id)
+        //Deletar
+        [HttpDelete]
+        public JsonResult Deletar(int id)
         {
-            var result = await _context.Usuarios.FindAsync(id);
+            var result = _context.usuarios.Find(id);
 
             if (result == null)
             {
-                return NotFound();
+                return new JsonResult(NotFound());
             }
-            _context.Usuarios.Remove(result);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            _context.usuarios.Remove(result);
+            _context.SaveChanges();
+            return new JsonResult(NoContent());
         }
 
-        // Pegar todos os dados
-        [HttpGet("GetAll")]
-        public IActionResult Todos()
+        //Pegar todos os dados
+        [HttpGet("/GetAll")]
+        public JsonResult Todos()
         {
-            var result = _context.Usuarios.ToList();
-            return Ok(result);
+            var result = _context.usuarios.ToList();
+            return new JsonResult(Ok(result));
         }
+
+
+        //Pegar todos os dados
+        [HttpGet("/Mysql")]
+        public async Task<IActionResult> Banco()
+        {
+            try
+            {
+                await Chamada();
+                return Ok("Chamada realizada com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao realizar a chamada: {ex.Message}");
+            }
+        }
+
+      
+
     }
 }

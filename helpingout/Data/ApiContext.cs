@@ -1,17 +1,13 @@
-﻿
-using helpingout.Controllers;
-using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
+﻿using Microsoft.EntityFrameworkCore;
+using helpingout.Models;
 
-namespace ServidorExemplo.Data
+namespace helpingout.Data
 {
-
     public class ApiContext : DbContext
     {
-        public DbSet<Usuario> usuarios { get; set; }
-        public ApiContext(DbContextOptions<ApiContext> options) : base(options)
-        {
+        public ApiContext(DbContextOptions<ApiContext> options) : base(options) { }
 
-        }
+        public DbSet<Evento> Eventos { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
     }
 }

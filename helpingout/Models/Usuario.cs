@@ -1,29 +1,20 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace helpingout.Controllers
+namespace helpingout.Models
 {
     public class Usuario
     {
-        public string Email { get; set; }
-        public string Nome { get; set; }
-        public string Senha { get; set; }
-        public string Cpf { get; set; }
-        public string Endereco { get; set; }
-        public string Telefone { get; set; }
-        public string DataNascimento { get; set; }
-        public string Curso { get; set; }
-        public string ProfessorFecap { get; set; }
-        public string Materia { get; set; }
-
-
-       
-
-
-
-
-
-
-
+        public string email { get; set; }
+        public string nome { get; set; }
+        public string senha { get; set; }
+        public string cpf { get; set; }
+        public string endereco { get; set; }
+        public string telefone { get; set; }
+        public string datanascimento { get; set; }
+        public string curso { get; set; }
+        public string professor { get; set; }
+        public string materia { get; set; }
+        public int id_usuario { get; set; }
 
 
 
